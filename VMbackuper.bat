@@ -14,7 +14,7 @@ set _7zip="C:\Program Files\7-Zip\7z.exe"
 %_vmManager% snapshot %_vmSourceName% take "tmp_snapshot"
 
 ::Create clone
-%_vmManager% clonevm %_vmSourceName% --name %_vmCloneName% --basefolder "%cd%" --snapshot "tmp_snapshot"
+%_vmManager% clonevm %_vmSourceName% --name %_vmCloneName% --basefolder "%cd%" --snapshot "tmp_snapshot" --register
 
 ::Delete tmp snapshot
 %_vmManager% snapshot %_vmSourceName% delete "tmp_snapshot"
@@ -22,8 +22,8 @@ set _7zip="C:\Program Files\7-Zip\7z.exe"
 ::Create arhive
 %_7zip% a %_vmCloneName%.zip %_vmCloneName%\* -mx=4
 
-::Delete source clone dir
-rmdir /s /q %_vmCloneName%
+::Unregister and delete VM clone
+%_vmManager% unregistervm %_vmCloneName% --delete
 
 ::Upload archive
 %_gdrive% upload --delete --timeout 1000 %_vmCloneName%.zip
